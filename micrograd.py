@@ -1,3 +1,4 @@
+import torch
 import math
 import numpy as np
 import matplotlib.pyplot as plt
@@ -98,7 +99,7 @@ class Value:
     
 
 
-# Inputs
+"""# Inputs
 x1 = Value(2.0, label='x1')
 x2 = Value(0.0, label='x2')
 
@@ -114,10 +115,26 @@ x1w1 = x1*w1; x1w1.label='x1w1'
 x2w2 = x2*w2; x2w2.label='x2w2'
 x1w1x2w2 = x1w1 + x2w2; x1w1x2w2.label='x1w1x2w2'
 n = x1w1x2w2 + b; n.label='n'
-e = (2*n).exp()
-o = (e - 1)/(e + 1); o.label = 'o'
+o = n.tanh(); o.label = 'o'
 
 # Gradients
 o.backward()
 dot = draw_dot(o)
-dot.render('graph_output', format='png', view=True)
+dot.render('graph_output', format='png', view=True)"""
+
+x1 = torch.Tensor([2.0]).double() ; x1.requires_grad= True
+x2 = torch.Tensor([0.0]).double() ; x2.requires_grad= True
+w1 = torch.Tensor([-3.0]).double(); w1.requires_grad= True
+w2 = torch.Tensor([1.0]).double() ; w2.requires_grad= True
+b = torch. Tensor( [6.8813735870195432]). double(); b.requires_grad = True
+n = x1*w1 + x2*w2 + b
+o = torch.tanh(n)
+
+print('o', o.data.item()) 
+o.backward()
+
+print('---')
+print('x2', x2.grad.item()) 
+print('w2', w2.grad.item()) 
+print('x1', x1.grad.item()) 
+print('w1', w1.grad.item())

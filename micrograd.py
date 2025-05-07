@@ -49,13 +49,13 @@ o = n.tanh(); o.label='o'
 o.grad = 1.0
 
 # Gradients
-n.grad = 1 - o.data**2
+n.grad = (1 - o.data**2) * o.grad 
 b.grad = 1 * n.grad
 x1w1x2w2.grad = 1 * n.grad
-x1w1.grad = x2w2.data * x1w1x2w2.grad
-x2w2.grad = x1w1.data * x1w1x2w2.grad
+x1w1.grad = 1.0 * x1w1x2w2.grad
+x2w2.grad = 1.0 * x1w1x2w2.grad
 x1.grad = w1.data * x1w1.grad
-w2.grad = x1.data * x1w1.grad
+w1.grad = x1.data * x1w1.grad
 x2.grad = w2.data * x2w2.grad
 w2.grad = x2.data * x2w2.grad
 

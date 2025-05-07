@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+from graph import *
 
 class Value:
     def __init__(self, data, _children=(), _op='', label=''):
@@ -24,4 +25,4 @@ class Value:
 a = Value(2.0, label='a')
 b = Value(-3.0, label='b')
 c = a+b; c.label='c'
-print(c)
+print(c._prev)

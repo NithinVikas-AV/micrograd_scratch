@@ -9,6 +9,7 @@ class Value:
         self.data = data
         self._prev = set(_children)
         self._op = _op
+        self._backward = lambda: None
         self.grad = 0.0
         self.label = label
 
@@ -17,17 +18,37 @@ class Value:
 
     def __add__(self, other):
         out = Value(self.data + other.data, (self, other), _op = '+')
+        
+        def _backward():
+            self.grad += 1.0 * out.grad
+            other.grad += 1.0*out.grad
+        out._backward = _backward
+
         return out
     
     def __mul__(self, other):
         out = Value(self.data * other.data, (self, other), _op = '*')
+
+        def _backward():
+            self.grad = out.grad * other.data
+            other.grad = out.grad * self.data
+        out._backward = _backward
+
         return out
     
     def tanh(self):
         x = self.data
         t = ((math.exp(2*x)-1)/(math.exp(2*x)+1))
         out = Value(t, (self, ), 'tanh')
+
+        def _backward():
+            self.grad = (1 - t**2) * out.grad
+        out._backward = _backward
+
         return out
+
+    
+
 
 # Inputs
 x1 = Value(2.0, label='x1')
@@ -49,7 +70,7 @@ o = n.tanh(); o.label='o'
 o.grad = 1.0
 
 # Gradients
-n.grad = (1 - o.data**2) * o.grad 
+"""n.grad = (1 - o.data**2) * o.grad 
 b.grad = 1 * n.grad
 x1w1x2w2.grad = 1 * n.grad
 x1w1.grad = 1.0 * x1w1x2w2.grad
@@ -57,7 +78,13 @@ x2w2.grad = 1.0 * x1w1x2w2.grad
 x1.grad = w1.data * x1w1.grad
 w1.grad = x1.data * x1w1.grad
 x2.grad = w2.data * x2w2.grad
-w2.grad = x2.data * x2w2.grad
+w2.grad = x2.data * x2w2.grad"""
+
+o._backward()
+n._backward()
+x1w1x2w2._backward()
+x1w1._backward()
+x2w2._backward()
 
 dot = draw_dot(o)
 dot.render('graph_output', format='png', view=True)

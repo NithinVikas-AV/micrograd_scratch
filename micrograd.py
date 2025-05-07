@@ -21,7 +21,7 @@ class Value:
         
         def _backward():
             self.grad += 1.0 * out.grad
-            other.grad += 1.0*out.grad
+            other.grad += 1.0 * out.grad
         out._backward = _backward
 
         return out
@@ -30,8 +30,8 @@ class Value:
         out = Value(self.data * other.data, (self, other), _op = '*')
 
         def _backward():
-            self.grad = out.grad * other.data
-            other.grad = out.grad * self.data
+            self.grad += out.grad * other.data
+            other.grad += out.grad * self.data
         out._backward = _backward
 
         return out
@@ -42,7 +42,7 @@ class Value:
         out = Value(t, (self, ), 'tanh')
 
         def _backward():
-            self.grad = (1 - t**2) * out.grad
+            self.grad += (1 - t**2) * out.grad
         out._backward = _backward
 
         return out
@@ -56,7 +56,7 @@ class Value:
                 for child in v._prev:
                     build_topo(child)
                 topo.append(v)
-        build_topo(o)
+        build_topo(self)
 
         self.grad = 1.0
         for node in reversed(topo):
@@ -84,7 +84,8 @@ o = n.tanh(); o.label='o'
 o.grad = 1.0
 
 # Gradients
-o.backward()
+z = x1 + x1; z.label='z'
+z.backward()
 
-dot = draw_dot(o)
+dot = draw_dot(z)
 dot.render('graph_output', format='png', view=True)

@@ -14,7 +14,8 @@ class Value:
         self.label = label
 
     def __repr__(self):
-        return f"Value( data = {self.data}, children = {self._prev}, op = {self._op}, label = {self.label} )"
+        return f"Value = {self.data}"
+        """return f"Value( data = {self.data}, children = {self._prev}, op = {self._op}, label = {self.label} )"""
 
     def __add__(self, other):
         other = other if isinstance(other, Value) else Value(other)

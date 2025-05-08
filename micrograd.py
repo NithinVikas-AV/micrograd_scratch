@@ -27,6 +27,9 @@ class Value:
 
         return out
     
+    def __radd__(self, other):
+        return self + other
+    
     def __neg__(self):
         return self * -1
 
@@ -118,5 +121,5 @@ o = n.tanh(); o.label = 'o'
 
 # Gradients
 o.backward()
-dot = draw_dot(o)
-dot.render('graph_output', format='png', view=True)
+#dot = draw_dot(o)
+#dot.render('graph_output', format='png', view=True)

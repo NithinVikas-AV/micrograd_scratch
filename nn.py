@@ -78,8 +78,8 @@ for k in range(1,20):
     if (k == 19):
         print(ypred)
 
-"""dot = draw_dot(loss)
-dot.render('graph_output', format='png', view=True)"""
+dot = draw_dot(loss)
+dot.render('graph_output', format='png', view=True)
 
 
 """x1 = torch.Tensor([2.0]).double() ; x1.requires_grad= True

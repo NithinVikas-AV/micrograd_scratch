@@ -47,32 +47,36 @@ class MLP:
     def parameters(self):
         return [p for layer in self.layers for p in layer.parameters()]
 
-print("parameters: ", len(n.parameters()))
-
 n = MLP(3, [4, 4, 1])
+
+print("No of Parameters: ", len(n.parameters()))
 
 xs = [
     [2.0, 3.0, -1.0],
     [3.0, -1.0, 0.5],
     [0.5, 1.0, 1.0],
     [1.0, 1.0, -1.0]
-]
+    ]
 ys = [1.0, -1.0, -1.0, 1.0]
 
-ypred = [n(x) for x in xs]
+for k in range(1,20):
+    #Forward pass
+    ypred = [n(x) for x in xs]
+    loss = sum([(yout - ygt)**2 for ygt, yout in zip(ys, ypred)])
 
-loss = sum([(yout - ygt)**2 for ygt, yout in zip(ys, ypred)])
-print("LOSS1: ", loss)
+    #Backward pass
+    for p in n.parameters():
+        p.grad = 0.0
+    loss.backward()
 
-loss.backward()
+    #Update
+    for p in n.parameters():
+        p.data += -0.1 * p.grad
 
-for p in n.parameters():
-    p.data += -0.01 * p.grad
+    print(k, " ---> ", loss.data)
 
-ypred = [n(x) for x in xs]
-
-loss = sum([(yout - ygt)**2 for ygt, yout in zip(ys, ypred)])
-print("LOSS2: ", loss)
+    if (k == 19):
+        print(ypred)
 
 """dot = draw_dot(loss)
 dot.render('graph_output', format='png', view=True)"""

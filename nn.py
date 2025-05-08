@@ -32,8 +32,8 @@ class MLP:
             x = layer(x)
         return x
 
-x = [2.0, 3.0, -1.0]
-n = MLP(3, [4, 4, 1])
+"""x = [2.0, 3.0, -1.0]
+n = MLP(3, [4, 4, 1]""")
 
 dot = draw_dot(n(x))
 dot.render('graph_output', format='png', view=True)
